@@ -8,10 +8,11 @@ The copy number of 45S rRNA genes is assessed using by calculating the coverage 
 
 # Required softwares
 
+The version indicated are the ones used and tested. Feel free to use different versions but beware incompatibility bugs.
+* Python3 (3.5.3)
 * bwa (v0.7.15)
 * bedtools (v2.25.0)
 * R (v3.5.0)
-* fastq-dump (v2.9.2)
 
 # Step-by-step
 
