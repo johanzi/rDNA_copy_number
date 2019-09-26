@@ -1,5 +1,5 @@
 # rDNA_copy_number
-Pipeline to assess the number of rDNA copies from Arabidopsis thaliana based on short reads. Pipeline based on Rabanal et al., 2017, G3.
+Pipeline to assess the number of rDNA copies from Arabidopsis thaliana based on short reads. Pipeline based on [Rabanal et al., 2017, G3](https://www.g3journal.org/content/7/4/1201).
 
 
 
@@ -130,20 +130,4 @@ done <<(ls *_copy_number.txt)
 ``` 
 
 The `summary_count.txt` file is then imported in R. Look into the code in [rDNA_copy_number_analysis.Rmd](rDNA_copy_number_analysis.Rmd). The data are random values used for illustration.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
