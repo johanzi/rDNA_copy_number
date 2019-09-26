@@ -34,8 +34,11 @@ Here a cartoon of the pipeline:
 ## Generate BWA indexes
 
 
-Download TAIR10 fasta file from [here](https://arabidopsis.org/download_files/Genes/TAIR10_genome_release/TAIR10_chromosome_files/TAIR10_chr_all.fas).
+Download TAIR10 fasta file from [here](https://arabidopsis.org/download_files/Genes/TAIR10_genome_release/TAIR10_chromosome_files/TAIR10_chr_all.fas). Or use wget:
 
+```{bash}
+wget https://arabidopsis.org/download_files/Genes/TAIR10_genome_release/TAIR10_chromosome_files/TAIR10_chr_all.fas
+```
 
 Replace simple chromosome number by chrX system:
 
