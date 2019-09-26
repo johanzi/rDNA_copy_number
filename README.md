@@ -1,11 +1,10 @@
 # rDNA_copy_number
-Pipeline to assess the number of rDNA copies from Arabidopsis thaliana based on short reads
+Pipeline to assess the number of rDNA copies from Arabidopsis thaliana based on short reads. Pipeline based on Rabanal et al., 2017, G3.
 
 
 
 # Introduction
 The copy number of 45S rRNA genes is assessed using by calculating the coverage of reads mapped at 18S sequence (chr3:14197677..14199484) and at the first 10 Mb of the chromosome 3 (chr3:0..10000000). The mapping is performed therefore in 2 times using bwa mem algorithm to map and samtools flagstat to retrieve the mapped read number. The number of reads in both region is divided by the size of the mapped regions (1808 bp and 10Mb, respectively). This provides an average number of reads per base pair. The ratio of the average read number/bp between 18S and chr3 provides the the estimated copy number of the 45S gene (18S being a good proxy of 45S copies according to Rabanal et al., 2017 G3).
-
 
 # Required softwares
 
@@ -27,7 +26,7 @@ The pipeline is:
 * Plot data in R
 
 
-Here a cartoon of the summary
+Here a cartoon of the pipeline:
 
 ![](images/summary_pipeline.png)
 
@@ -62,9 +61,6 @@ bwa index -p chr3_bwaidx -a bwtsw chr3_0_10Mb.fa
 bwa index -p 45S_bwaidx -a bwtsw 45S.fa
 ```
 
-The bed, fasta, and indexes files were already generated and are located in [bwa_indexes](./bwa_indexes).
-The `TAIR10_chr_all.fas` was deleted as it takes about 116 Mb.
-
 
 ## Mapping reads
 
@@ -75,6 +71,79 @@ For instance:
 
 ```{bash}
 
-bash mapping_bwa.sh -1 
+# For chromosome 3 10 Mb
+bash mapping_bwa.sh -1 file1.fastq.gz -2 file2.fastq.gz -i /path/to/index/chr3_bwaidx -o /path/to/output/chr3/
+
+# For 45S
+bash mapping_bwa.sh -1 file1.fastq.gz -2 file2.fastq.gz -i /path/to/index/45S_bwaidx -o /path/to/output/45S/
 
 ```
+
+## Counting reads 
+
+### Reads counting for Chr3 10 Mb
+
+```{bash}
+
+# Count in the bam files mapping on Chr3 10 Mb the number of reads
+samtools view -c file_chr3_10Mb.sorted.bam > file_chr3_10Mb_count.txt
+
+```
+
+
+### Reads counting for 18S
+
+Since I mapped my reads to 45S, the subset region 18S must be specified in bed format
+
+```{bash}
+
+# Create bed with 18S coordinates
+echo -e "chr3\t14197677\t14199484" > 18S.bed
+
+# Count in the bam files mapping on 45S the number of reads spanning the 18S region
+bedtools coverage -abam file_45S.sorted.bam -b 18S.bed -counts > file_18S_count.txt
+
+```
+
+### Calculate the number of copies
+
+This steps simply divides the number of reads by the size of each region (18S 1808 bp and chr3 1E7 bp) and divide the 2 values to get an estimated copy number. This is performed by the script [calculate_nb_rDNA.sh](calculate_nb_rDNA.sh)
+
+```{bash}
+bash calculate_nb_rDNA.sh -1 file_18S_count.txt -2 file_chr3_10Mb_count.txt > file_copy_number.txt
+```
+
+## Visualize data
+
+Once the number of rDNA copies is obtained for each sample. One can visualize the data in plots and perform statistics in R.
+Rmarkdown documents allow to display the plots within text which is clearer than a raw R script.
+
+Firstly, if more than 1 sample is analyzed, we will pool the data before importing in R.
+
+
+```{bash}
+while read i; do
+	name_file=$(echo $i)
+	count=$(cat $i)
+	echo -e "$name_file\t$count" >> summary_count.txt
+done <<(ls *_copy_number.txt) 
+``` 
+
+The `summary_count.txt` file is then imported in R. Look into the code in [rDNA_copy_number_analysis.Rmd](rDNA_copy_number_analysis.Rmd).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

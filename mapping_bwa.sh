@@ -5,18 +5,18 @@
 #This script map single or paired-end reads using BWA MEM algorithm.
 
 usage="$(basename "$0") [-h] -1 file1.fastq [-2 file2.fastq] -i path/to/bwa/index/prefix_bwaidx -o /path/to/output/dir \n
-The program map single or paired-end data reads on a given reference bwa index.
-
-where:
-    -h  show this help text
-    -1  first fastq file
-    -2  second fastq file (optional)
-    -i  region to map in case of local mapping (either '45S' or 'chr3')
-    -o  output directory
-    
-Author:
-    written by Johan Zicola (johan.zicola@gmail.com)
-    2019-09-25
+This script uses BWA to map single or paired-end data reads using the MEM algorithm.\n
+\n
+Argument:\n
+    -h  show this help text\n
+    -1  first fastq file\n
+    -2  second fastq file (ptional)\n
+    -i  region to map in case of local mapping (either '45S' or 'chr3')\n
+    -o  output directory\n
+\n
+Author:\n
+    written by Johan Zicola (johan.zicola@gmail.com)\n
+    2019-09-25\n
 "
 
 # Definition
@@ -134,20 +134,17 @@ give_date(){
 mappingBWA(){
 
     #Map using the MEM algorithm of BWA, keep only primary mapped reads and index them (use 4 threads)
-    echo "Mapping at $(give_date)" >> ${path_output}log.txt
-   
+    echo "Mapping at $(give_date)" >> ${path_output}/log.txt
+   	
+	# Use paired-end mode if second fastq file was provided
 	if [ ! -z ${fastq2} ]; then 
 		#Map, convert sam to bam, remove unmapped reads (-F 4), sort the bam file according to read position
-		echo -e "bwa mem -M -t 4 $index ${fastq_file1} ${fastq_file2} | samtools view -bS -F 4 - | samtools sort - -o ${path_output}/${name_file}.sorted.bam\t" >> ${path_output}log.txt
+		echo -e "bwa mem -M -t 4 $index ${fastq_file1} ${fastq_file2} | samtools view -bS -F 4 - | samtools sort - -o ${path_output}/${name_file}.sorted.bam\t" >> ${path_output}/log.txt
 		bwa mem -M -t 4 $index ${fastq_file1} ${fastq_file2} | samtools view -bS -F 4 - | samtools sort - -o ${path_output}/${name_file}.sorted.bam
-    else
-		echo -e "bwa mem -M -t 4 $index ${fastq_file1} | samtools view -bS -F 4 - | samtools sort - -o ${path_output}/${name_file}.sorted.bam\t" >> ${path_output}log.txt
+    # If only 1 fastq file provided, use SE mode
+	else
+		echo -e "bwa mem -M -t 4 $index ${fastq_file1} | samtools view -bS -F 4 - | samtools sort - -o ${path_output}/${name_file}.sorted.bam\t" >> ${path_output}/log.txt
 		bwa mem -M -t 4 $index ${fastq_file1} | samtools view -bS -F 4 - | samtools sort - -o ${path_output}/${name_file}.sorted.bam
-		
-	#Index the bam file (needed for GATK)
-    echo -e "indexing of bam file: samtools index -b ${work_dir}${name}_${ext}.sorted.bam" >> ${path_output}log.txt
-    samtools index -b ${path_output}${name}_${ext}.sorted.bam
-
 }
 
 mappingBWA "$@"
