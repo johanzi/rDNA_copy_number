@@ -97,11 +97,11 @@ samtools view -c file_chr3_10Mb.sorted.bam > file_chr3_10Mb_count.txt
 
 ### Reads counting for 18S
 
-Since I mapped my reads to 45S, the subset region 18S must be specified in bed format
+Since the reads were mapped to 45S sequence, we need to indicate the subset region 18S in bed format
 
 ```{bash}
 
-# Create bed with 18S coordinates
+# Create bed file with 18S coordinates
 echo -e "chr3\t14197677\t14199484" > 18S.bed
 
 # Count in the bam files mapping on 45S the number of reads spanning the 18S region
@@ -111,7 +111,7 @@ bedtools coverage -abam file_45S.sorted.bam -b 18S.bed -counts > file_18S_count.
 
 ### Calculate the number of copies
 
-This steps simply divides the number of reads by the size of each region (18S 1808 bp and chr3 1E7 bp) and divide the 2 values to get an estimated copy number. This is performed by the script [calculate_nb_rDNA.sh](calculate_nb_rDNA.sh)
+This steps simply divides the number of reads by the size of each region (18S 1808 bp and chr3 1E7 bp) to get a number of reads per bp and divide the 2 values to get an estimated copy number. This is performed by the script [calculate_nb_rDNA.sh](calculate_nb_rDNA.sh)
 
 ```{bash}
 bash calculate_nb_rDNA.sh -1 file_18S_count.txt -2 file_chr3_10Mb_count.txt > file_copy_number.txt
