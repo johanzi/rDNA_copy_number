@@ -1,0 +1,44 @@
+---
+title: "rRNA copy number variation in African accessions of Arabidopsis thaliana"
+author: "Johan Zicola"
+date: "`r Sys.Date()`"
+output: html_notebook
+---
+
+
+# Import data
+
+```{r}
+
+#Import dataset
+summary_count <- read.delim("data/summary_count.txt", sep="\t", dec = ".", header = FALSE)
+
+#Give headers
+colnames(summary_count) <- c("file_name", "copy_number")
+
+#Convert into dataframe
+df <- as.data.frame(summary_count)
+
+# Factorize sample name (in case it is a digit)
+df$file_name <- as.factor(df$file_name)
+
+```
+
+
+# Plot boxplot data
+
+```{r}
+# Get average of copy number
+average <- summary(df$copy_number)[[4]]
+
+ggplot(df, aes(file_name, copy_number)) + geom_bar(stat="identity", fill='#6699CC', color="black") + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  ggtitle("rRNA copy number variation") + theme(plot.title = element_text(hjust = 0.5)) + geom_hline(yintercept = average, linetype="dashed")
+```
+
+# Plot histogram
+
+```{r}
+hist(df$copy_number, xlab="Sample", main="Copy number")
+```
+
