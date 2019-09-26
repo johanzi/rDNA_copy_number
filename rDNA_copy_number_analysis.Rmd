@@ -6,11 +6,21 @@ output: html_notebook
 ---
 
 
+# Library
+
+```{r}
+library(ggplot2)
+```
+
+
 # Import data
 
 ```{r}
 
-#Import dataset
+# Set the working directory to the folder containing this script
+setwd("/path/to/this/script")
+
+#Import toy dataset
 summary_count <- read.delim("data/summary_count.txt", sep="\t", dec = ".", header = FALSE)
 
 #Give headers
@@ -35,6 +45,15 @@ ggplot(df, aes(file_name, copy_number)) + geom_bar(stat="identity", fill='#6699C
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
   ggtitle("rRNA copy number variation") + theme(plot.title = element_text(hjust = 0.5)) + geom_hline(yintercept = average, linetype="dashed")
 ```
+
+For clearer label, one can modify the label of each file and parse it or replace it with an accession name. Use e.g. for this `merge` with another dataframe containing the name of the sample and the name of the file.
+
+```{r}
+# Import df_name wich contains file_name and accession name
+new_df <- merge(df_name, df, by="file_name")
+
+```
+
 
 # Plot histogram
 
