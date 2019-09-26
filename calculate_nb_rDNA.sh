@@ -8,7 +8,7 @@
 # Check if python3 is installed
 command -v python3 >/dev/null 2>&1 || { echo >&2 "python3 is not installed.  Aborting."; exit 1; }
 
-while getopts ":1:2:" arg; do
+while getopts "1:2:" arg; do
     case $arg in
         1)
             if [ ! -e $OPTARG ]; then
