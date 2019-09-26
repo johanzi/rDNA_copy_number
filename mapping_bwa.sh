@@ -138,7 +138,7 @@ mappingBWA(){
    
 	if [ ! -z ${fastq2} ]; then 
 		#Map, convert sam to bam, remove unmapped reads (-F 4), sort the bam file according to read position
-		echo -e "bwa mem -M -t 4 $ref ${work_dir}${fastq_file1} ${work_dir}${fastq_file2} | samtools view -bS -F 4 - | samtools sort - -o ${path_output}/${name_file}.sorted.bam\t" >> ${path_output}log.txt
+		echo -e "bwa mem -M -t 4 $index ${fastq_file1} ${fastq_file2} | samtools view -bS -F 4 - | samtools sort - -o ${path_output}/${name_file}.sorted.bam\t" >> ${path_output}log.txt
 		bwa mem -M -t 4 $index ${fastq_file1} ${fastq_file2} | samtools view -bS -F 4 - | samtools sort - -o ${path_output}/${name_file}.sorted.bam
     else
 		echo -e "bwa mem -M -t 4 $index ${fastq_file1} | samtools view -bS -F 4 - | samtools sort - -o ${path_output}/${name_file}.sorted.bam\t" >> ${path_output}log.txt
