@@ -68,10 +68,9 @@ bwa index -p 45S_bwaidx -a bwtsw 45S.fa
 
 ## Mapping reads
 
-The script [mapping_bwa.sh](mapping_bwa.sh) maps the reads from single or paired-end data and generates a bam file with aligned reads. Four threads are chosen by default for bwa alignment but one can modify the argument `-t 4` and change the default value.
+The script [mapping_bwa.sh](mapping_bwa.sh) maps the reads from single or paired-end data and generates a bam file with aligned reads. Four threads are chosen by default for bwa alignment but one can modify the argument `-t 4` and change the default value. The reads are either mapped on the first 10Mb of chromosome 3 or on the 45S sequence located in `chr3:14195483..14204860`.
 
-
-For instance:
+Alternatively, one can use, if available, bam files containing reads aligning to the whole genome (using bwa with the same parameters) and perform the counting directly on these files. The outputs from the 2 methods strongly correlate. The advantage of the local mapping method compared to the genome-wide mapping is the CPU required for BWA to map the reads.
 
 ```{bash}
 
@@ -94,6 +93,14 @@ samtools view -c file_chr3_10Mb.sorted.bam > file_chr3_10Mb_count.txt
 
 ```
 
+In case a bam file containing the reads aligned to the whole genome is used:
+
+```{bash}
+
+# Count in the bam files mapping on Chr3 10 Mb the number of reads
+bedtools coverage -abam file_global.sorted.bam -b chr3_0_10Mb.bed -counts > file_chr3_10Mb_count.txt
+
+```
 
 ### Reads counting for 18S
 
@@ -108,6 +115,7 @@ echo -e "chr3\t14197677\t14199484" > 18S.bed
 bedtools coverage -abam file_45S.sorted.bam -b 18S.bed -counts > file_18S_count.txt
 
 ```
+The same command can be used if a bam file containing the reads aligned to the whole genome is used.
 
 ### Calculate the number of copies
 
