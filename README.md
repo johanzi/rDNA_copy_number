@@ -70,7 +70,7 @@ bwa index -p 45S_bwaidx -a bwtsw 45S.fa
 
 The script [mapping_bwa.sh](mapping_bwa.sh) maps the reads from single or paired-end data and generates a bam file with aligned reads. Four threads are chosen by default for bwa alignment but one can modify the argument `-t 4` and change the default value. The reads are either mapped on the first 10Mb of chromosome 3 or on the 45S sequence located in `chr3:14195483..14204860`.
 
-Alternatively, one can use, if available, bam files containing reads aligning to the whole genome (using bwa with the same parameters) and perform the counting directly on these files. The outputs from the 2 methods strongly correlate. The advantage of the local mapping method compared to the genome-wide mapping is the CPU required for BWA to map the reads.
+Alternatively, one can use, if available, bam files containing reads aligning to the whole genome (using bwa with the same parameters) and perform the counting directly on these files. The outputs from the 2 methods strongly correlate. The advantage of the local mapping method compared to the genome-wide mapping is the computing time required for BWA to map the reads is much smaller.
 
 ```{bash}
 
