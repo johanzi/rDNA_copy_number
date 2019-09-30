@@ -11,7 +11,7 @@ Argument:\n
     -h  show this help text\n
     -1  first fastq file\n
     -2  second fastq file (ptional)\n
-    -i  region to map in case of local mapping (either '45S' or 'chr3')\n
+    -i  bwa index from the fasta file of the region to map in case of local mapping (either '45S' or 'chr3')\n
     -o  output directory\n
 \n
 Author:\n
@@ -64,7 +64,7 @@ while getopts "h?:1:2:i:o:" arg; do
 			# Check if the prefix_bwaidx.amb file exists
 			index_name=${OPTARG}.amb
 			
-			if [ ! -d $OPTARG ]; then
+			if [ ! -d $path_index ]; then
 				echo "Path to bwa index file incorrect or not existing"
 				exit 1
 			elif [ ! -e $index_name ]; then
@@ -111,8 +111,9 @@ else
 	echo "Fastq file 2: No 2nd fastq file provided, data are assumed to be single end"
 fi
 
-echo "Path to bwa index file: $path_index"
+echo "Path to bwa index files: $path_index"
 
+echo "Prefix of the bwa index files: $index_name"
 
 
 # Check installed softwares
@@ -134,17 +135,20 @@ give_date(){
 mappingBWA(){
 
     #Map using the MEM algorithm of BWA, keep only primary mapped reads and index them (use 4 threads)
-    echo "Mapping at $(give_date)" >> ${path_output}/log.txt
+    echo "Mapping at $(give_date)" 
    	
 	# Use paired-end mode if second fastq file was provided
 	if [ ! -z ${fastq2} ]; then 
 		#Map, convert sam to bam, remove unmapped reads (-F 4), sort the bam file according to read position
-		echo -e "bwa mem -M -t 4 $index ${fastq_file1} ${fastq_file2} | samtools view -bS -F 4 - | samtools sort - -o ${path_output}/${name_file}.sorted.bam\t" >> ${path_output}/log.txt
-		bwa mem -M -t 4 $index ${fastq_file1} ${fastq_file2} | samtools view -bS -F 4 - | samtools sort - -o ${path_output}/${name_file}.sorted.bam
+		echo -e "bwa mem -M -t 4 $index ${fastq} ${fastq2} | samtools view -bS -F 4 - | samtools sort - -o ${path_output}/${name_file}.sorted.bam\t" 
+		bwa mem -M -t 4 $index ${fastq} ${fastq2} | samtools view -bS -F 4 - | samtools sort - -o ${path_output}/${name_file}.sorted.bam
     # If only 1 fastq file provided, use SE mode
 	else
-		echo -e "bwa mem -M -t 4 $index ${fastq_file1} | samtools view -bS -F 4 - | samtools sort - -o ${path_output}/${name_file}.sorted.bam\t" >> ${path_output}/log.txt
-		bwa mem -M -t 4 $index ${fastq_file1} | samtools view -bS -F 4 - | samtools sort - -o ${path_output}/${name_file}.sorted.bam
+		echo -e "bwa mem -M -t 4 $index ${fastq} | samtools view -bS -F 4 - | samtools sort - -o ${path_output}/${name_file}.sorted.bam\t" 
+		bwa mem -M -t 4 $index ${fastq} | samtools view -bS -F 4 - | samtools sort - -o ${path_output}/${name_file}.sorted.bam
+	fi
 }
 
+
 mappingBWA "$@"
+
