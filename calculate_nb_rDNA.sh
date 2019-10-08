@@ -50,8 +50,8 @@ count_chr3=$(cat $file_chr3)
 normalized_18S_count=$(python3 -c "print($count_18S/1808)")
 normalized_chr3_count=$(python3 -c "print($count_chr3/1E7)")
 
-# Divide the normalized values
-nb_copies=$(python3 -c "print($normalized_18S_count/$normalized_chr3_count)")
+# Divide the normalized values and round to 0 decimal
+nb_copies=$(python3 -c "print(round($normalized_18S_count/$normalized_chr3_count))")
 
 # Return in STDOUT the value
 echo $nb_copies
