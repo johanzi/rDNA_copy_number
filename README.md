@@ -98,7 +98,7 @@ In case a bam file containing the reads aligned to the whole genome is used:
 ```{bash}
 
 # Count in the bam files mapping on Chr3 10 Mb the number of reads
-bedtools coverage -abam file_global.sorted.bam -b chr3_0_10Mb.bed -counts > file_chr3_10Mb_count.txt
+bedtools coverage -abam file_global.sorted.bam -b chr3_0_10Mb.bed -counts | wc -l > file_chr3_10Mb_count.txt
 
 ```
 
@@ -112,7 +112,7 @@ Since the reads were mapped to 45S sequence, we need to indicate the subset regi
 echo -e "chr3\t14197677\t14199484" > 18S.bed
 
 # Count in the bam files mapping on 45S the number of reads spanning the 18S region
-bedtools coverage -abam file_45S.sorted.bam -b 18S.bed -counts > file_18S_count.txt
+bedtools coverage -abam file_45S.sorted.bam -b 18S.bed -counts | wc -l > file_18S_count.txt
 
 ```
 The same command can be used if a bam file containing the reads aligned to the whole genome is used.
